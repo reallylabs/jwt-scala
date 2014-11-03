@@ -8,14 +8,17 @@ An implementation of [JSON Web Tokens](http://self-issued.info/docs/draft-ietf-o
 ### Setup
 Jwt-scala has been published for scala 2.11 and sbt 0.13.6
 
-Add the resolver and the dependency
+Add the dependency to your build.sbt
 ```
+libraryDependencies += "io.really" %% "jwt-scala" % "1.0"
 ```
 
 ### Usage
 
 #### Encode
 ```
+import io.really.jwt._
+
 val payload = Json.obj("name" -> "Ahmed", "email" -> "ahmed@gmail.com")
 val jwt = JWT.encode("secret-key", payload)
 ```
