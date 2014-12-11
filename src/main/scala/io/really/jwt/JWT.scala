@@ -106,6 +106,19 @@ object JWT {
   }
 
   /**
+   * encode jwt with no verifying secret
+   * @param payload that represent data for token
+   * @param header that represent data for JWT header
+   * @param algorithm that represent algorithm using on JWT
+   * @return String
+   */
+  def encodeWithoutSecret(payload: JsObject, header: JsObject = Json.obj(), algorithm: Option[Algorithm] = Some(Algorithm.HS256)): String = {
+    val headerEncoded = encodeHeader(algorithm, header)
+    val payloadEncoded = encodePayload(payload)
+    s"${headerEncoded}.${payloadEncoded}."
+  }
+
+  /**
    * split JWT to Header, Payload and signature
    * @param str that represent JWT
    * @param verify if this JWT is contains signature part or not
@@ -129,7 +142,7 @@ object JWT {
         val headerPart :: payloadPart :: signaturePart = parts
         val header = Json.parse(decodeBase64url(headerPart)).as[JsObject]
         val payload = Json.parse(decodeBase64url(payloadPart)).as[JsObject]
-        val signature = signaturePart.head
+        val signature = signaturePart.headOption.getOrElse("")
         val signingInput = s"${headerPart}.${payloadPart}"
         Success((header, payload, signature, signingInput))
       case Failure(e) => Failure(e)
