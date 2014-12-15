@@ -10,7 +10,7 @@ Jwt-scala has been published for scala 2.11 and sbt 0.13.6
 
 Add the dependency to your build.sbt
 ```
-libraryDependencies += "io.really" %% "jwt-scala" % "1.0"
+libraryDependencies += "io.really" %% "jwt-scala" % "1.1"
 ```
 
 ### Usage
