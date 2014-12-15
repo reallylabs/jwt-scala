@@ -38,6 +38,12 @@ package object jwt {
     /**
      * Represent type of RSASSA Algorithm that using SHA-256 hash algorithm
      */
+    case object NONE extends Algorithm {
+      override def toString = "none"
+    }
+    /**
+     * Represent type of RSASSA Algorithm that using SHA-256 hash algorithm
+     */
     case object RS256 extends Algorithm {
       override def toString = "RS256"
     }
@@ -65,6 +71,7 @@ package object jwt {
       case JsString("HmacSHA256") => JsSuccess(HS256)
       case JsString("HmacSHA384") => JsSuccess(HS384)
       case JsString("HmacSHA512") => JsSuccess(HS512)
+      case JsString("none") => JsSuccess(NONE)
       case JsString("RS256") => JsSuccess(RS256)
       case JsString("RS384") => JsSuccess(RS384)
       case JsString("RS512") => JsSuccess(RS512)

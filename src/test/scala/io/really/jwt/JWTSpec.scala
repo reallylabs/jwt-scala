@@ -16,6 +16,13 @@ class JWTSpec extends FlatSpec with ShouldMatchers {
     assertResult(JWT.decode(jwt, None).asInstanceOf[JWTResult.JWT].payload)(payload)
   }
 
+  it should "generate json web token with no provided secret" in {
+    val payload = Json.obj("name" -> "Ahmed", "email" -> "ahmed@gmail.com")
+    val jwt = JWT.encodeWithoutSecret(payload)
+
+    assertResult(JWT.decode(jwt, None).asInstanceOf[JWTResult.JWT].payload)(payload)
+  }
+
   "decode" should "decode token and verify it" in {
     val payload = Json.obj("name" -> "Ahmed", "email" -> "ahmed@gmail.com")
     val jwt = JWT.encode("secret", payload)
@@ -49,6 +56,26 @@ class JWTSpec extends FlatSpec with ShouldMatchers {
 
   it should "return EmptyJWT if you try decode empty string" in {
     assertResult(JWTResult.EmptyJWT)(JWT.decode("", Some("secret")))
+  }
+
+  it should "decode a token encoded with no secret" in {
+    val payload = Json.obj("name" -> "Ahmed", "email" -> "ahmed@gmail.com")
+    val jwt = JWT.encodeWithoutSecret(payload)
+
+    val token = JWT.decode(jwt, None).asInstanceOf[JWTResult.JWT]
+
+    assertResult(payload)(token.payload)
+    assertResult(Json.obj("alg" -> Algorithm.HS256, "typ" -> "JWT"))(token.header.toJson)
+  }
+
+  it should "decode a token encoded with no algorithm" in {
+    val payload = Json.obj("name" -> "Ahmed", "email" -> "ahmed@gmail.com")
+    val jwt = JWT.encodeWithoutSecret(payload, Json.obj(), Some(Algorithm.NONE))
+
+    val token = JWT.decode(jwt, None).asInstanceOf[JWTResult.JWT]
+
+    assertResult(payload)(token.payload)
+    assertResult(Json.obj("alg" -> Algorithm.NONE, "typ" -> "JWT"))(token.header.toJson)
   }
 
 }
