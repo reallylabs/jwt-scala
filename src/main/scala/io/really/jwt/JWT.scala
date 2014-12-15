@@ -25,6 +25,7 @@ object JWT {
       case Algorithm.HS256 | Algorithm.HS384 | Algorithm.HS512 =>
         signHmac(algorithm, msg, key)
       case Algorithm.RS256 | Algorithm.RS384 | Algorithm.RS512 => ???
+      case Algorithm.NONE => msg
     }
 
   /**
@@ -161,6 +162,7 @@ object JWT {
       case Algorithm.HS256 | Algorithm.HS384 | Algorithm.HS512 =>
         encodedSignature(signingInput, key, Some(algorithm)).equals(signature)
       case Algorithm.RS256 | Algorithm.RS384 | Algorithm.RS512 => ???
+      case Algorithm.NONE => true
     }
   }
 
