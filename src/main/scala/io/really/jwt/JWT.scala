@@ -4,6 +4,7 @@
 package io.really.jwt
 
 import javax.crypto.Mac
+import io.really.jwt.JWTException.InvalidAlgorithm
 import play.api.libs.json._
 import javax.crypto.spec.SecretKeySpec
 import org.apache.commons.codec.binary.Base64
@@ -12,7 +13,6 @@ import scala.util.{Try, Success, Failure}
 
 
 object JWT {
-
   /**
    * generate Signature for token
    * @param algorithm that represent algorithm using on JWT
@@ -24,7 +24,9 @@ object JWT {
     algorithm match {
       case Algorithm.HS256 | Algorithm.HS384 | Algorithm.HS512 =>
         signHmac(algorithm, msg, key)
-      case Algorithm.RS256 | Algorithm.RS384 | Algorithm.RS512 => ???
+      case Algorithm.RS256 | Algorithm.RS384 | Algorithm.RS512 =>
+        //RSA is Asymetric thus it needs a PrivateKey
+        signRsa(algorithm, msg, key)
       case Algorithm.NONE => msg
     }
 
@@ -39,6 +41,37 @@ object JWT {
     val mac: Mac = Mac.getInstance(algorithm.toString)
     mac.init(new SecretKeySpec(key.getBytes("utf-8"), algorithm.toString))
     new String(mac.doFinal(msg.getBytes("utf-8")))
+  }
+
+  /**
+   * verify the token signature based on type of RSA Algorithm
+   * we can only 'verify' hence RSA is asymetric and we only have the public Key
+   * @param algorithm that represent algorithm using on JWT
+   * @param msg is String that represent encoding value for JWT Header and JWT Payload
+   * @param publicKey that is the publickey that use to verify token
+   * @return Boolean
+   */
+  private[jwt] def verifyRsa(algorithm: Algorithm, publicKey: String, msg: String, signature:String): Boolean = {
+    import java.security.Signature
+    val rsa = Signature.getInstance(algorithm.toString)
+    rsa.initVerify(PemUtil.decodePublicKey(publicKey))
+    rsa.update(msg.getBytes("utf-8"))
+    rsa.verify(Base64.decodeBase64(signature))
+  }
+
+  /**
+   * generate token signature based on type of RSA with SHA Algorithm
+   * @param algorithm that represent algorithm using on JWT
+   * @param msg is String that represent encoding value for JWT Header and JWT Payload
+   * @param privateKey that is the secret key that use to sign token
+   * @return token signature
+   */
+  private[jwt] def signRsa(algorithm: Algorithm,  msg: String, privateKey: String): String = {
+    import java.security.Signature
+    val rsa = Signature.getInstance(algorithm.toString)
+    rsa.initSign(PemUtil.decodePrivateKey(privateKey))
+    rsa.update(msg.getBytes("utf-8"))
+    new String(rsa.sign(), "utf-8")
   }
 
   /**
@@ -161,7 +194,8 @@ object JWT {
     algorithm match {
       case Algorithm.HS256 | Algorithm.HS384 | Algorithm.HS512 =>
         encodedSignature(signingInput, key, Some(algorithm)).equals(signature)
-      case Algorithm.RS256 | Algorithm.RS384 | Algorithm.RS512 => ???
+      case Algorithm.RS256 | Algorithm.RS384 | Algorithm.RS512 =>
+        verifyRsa(algorithm, key, signingInput, signature)
       case Algorithm.NONE => true
     }
   }
