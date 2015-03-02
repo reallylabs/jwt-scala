@@ -1,5 +1,6 @@
 package io.really.jwt
 
+import java.security.spec.PKCS8EncodedKeySpec
 import java.security.{PrivateKey, PublicKey}
 import io.really.jwt.JWTException.{InvalidPublicKey, InvalidPrivateKey}
 import org.apache.commons.codec.binary.Base64
@@ -54,7 +55,7 @@ object DerUtil {
   }
 
   def decodePrivateKey(der: Array[Byte]): PrivateKey = {
-    val spec = new X509EncodedKeySpec(der)
+    val spec = new PKCS8EncodedKeySpec(der)
     val kf = KeyFactory.getInstance("RSA", "BC")
     kf.generatePrivate(spec);
   }

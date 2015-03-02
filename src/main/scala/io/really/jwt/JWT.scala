@@ -40,7 +40,7 @@ object JWT {
   private[jwt] def signHmac(algorithm: Algorithm, msg: String, key: String): String = {
     val mac: Mac = Mac.getInstance(algorithm.toString)
     mac.init(new SecretKeySpec(key.getBytes("utf-8"), algorithm.toString))
-    new String(mac.doFinal(msg.getBytes("utf-8")))
+    encodeBase64url(new String(mac.doFinal(msg.getBytes("utf-8"))))
   }
 
   /**
@@ -71,7 +71,7 @@ object JWT {
     val rsa = Signature.getInstance(algorithm.toString)
     rsa.initSign(PemUtil.decodePrivateKey(privateKey))
     rsa.update(msg.getBytes("utf-8"))
-    new String(rsa.sign(), "utf-8")
+    Base64.encodeBase64URLSafeString(rsa.sign())
   }
 
   /**
@@ -119,7 +119,7 @@ object JWT {
   private[jwt] def encodedSignature(msg: String, key: String, algorithm: Option[Algorithm]): String =
     algorithm match {
       case Some(alg) =>
-        encodeBase64url(signToken(alg, msg, key))
+        signToken(alg, msg, key)
       case None => ""
     }
 
