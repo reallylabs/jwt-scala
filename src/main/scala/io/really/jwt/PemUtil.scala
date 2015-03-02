@@ -24,7 +24,7 @@ object PemUtil {
     trial.getOrElse(throw new InvalidPrivateKey())
   }
 
-  private def removeBeginEnd(pem: String) = {
+  def removeBeginEnd(pem: String) = {
     pem.replaceAll("-----BEGIN (.*)-----", "")
       .replaceAll("-----END (.*)----", "")
       .replaceAll("\r\n", "")
