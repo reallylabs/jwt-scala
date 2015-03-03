@@ -1,6 +1,6 @@
 name := "jwt-scala"
 
-version := "1.2"
+version := "1.2.1"
 
 organization := "io.really"
 
