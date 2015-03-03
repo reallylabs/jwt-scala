@@ -10,7 +10,7 @@ Jwt-scala has been published for scala 2.11 and sbt 0.13.6
 
 Add the dependency to your build.sbt
 ```
-libraryDependencies += "io.really" %% "jwt-scala" % "1.1"
+libraryDependencies += "io.really" %% "jwt-scala" % "1.2"
 ```
 
 ### Usage
@@ -22,6 +22,15 @@ import io.really.jwt._
 val payload = Json.obj("name" -> "Ahmed", "email" -> "ahmed@gmail.com")
 val jwt = JWT.encode("secret-key", payload)
 ```
+By default Encode will use `HS256` Algorithm but you can pass optional Algorithm
+
+```
+val jwt = JWT.encode("secret-key", payload, Some(Algorithm.HS256))
+```
+***Supported algorithm are :*** 
+
+- HS256, HS384, HS512
+- RS256, RS384, RS512
 
 #### Decode
 

@@ -45,19 +45,19 @@ package object jwt {
      * Represent type of RSASSA Algorithm that using SHA-256 hash algorithm
      */
     case object RS256 extends Algorithm {
-      override def toString = "RS256"
+      override def toString = "SHA256withRSA"
     }
     /**
      * Represent type of RSASSA Algorithm that using SHA-384 hash algorithm
      */
     case object RS384 extends Algorithm {
-      override def toString = "RS384"
+      override def toString = "SHA384withRSA"
     }
     /**
      * Represent type of RSASSA Algorithm that using SHA-512 hash algorithm
      */
     case object RS512 extends Algorithm {
-      override def toString = "RS512"
+      override def toString = "SHA512withRSA"
     }
   }
 
@@ -72,6 +72,10 @@ package object jwt {
       case JsString("HmacSHA384") => JsSuccess(HS384)
       case JsString("HmacSHA512") => JsSuccess(HS512)
       case JsString("none") => JsSuccess(NONE)
+      case JsString("SHA256withRSA") => JsSuccess(RS256)
+      case JsString("SHA384withRSA") => JsSuccess(RS384)
+      case JsString("SHA512withRSA") => JsSuccess(RS512)
+      // Alias names
       case JsString("RS256") => JsSuccess(RS256)
       case JsString("RS384") => JsSuccess(RS384)
       case JsString("RS512") => JsSuccess(RS512)

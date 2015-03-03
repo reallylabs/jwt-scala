@@ -1,6 +1,6 @@
 name := "jwt-scala"
 
-version := "1.1"
+version := "1.2"
 
 organization := "io.really"
 
@@ -35,12 +35,13 @@ publishTo := {
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.5"
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.1.5" % "test",
-  "com.typesafe.play" %% "play-json" % "2.3.6",
-  "commons-codec" % "commons-codec" % "1.6"
+  "com.typesafe.play" %% "play-json" % "2.3.8",
+  "commons-codec" % "commons-codec" % "1.6",
+  "org.bouncycastle" % "bcprov-jdk16" % "1.46"
 )
 
 resolvers ++= Seq(
