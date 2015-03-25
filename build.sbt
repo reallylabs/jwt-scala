@@ -1,10 +1,10 @@
 name := "jwt-scala"
 
-version := "1.2.1"
+version := "1.2.2"
 
 organization := "io.really"
 
-crossScalaVersions := Seq("2.10.4", "2.11.0")
+crossScalaVersions := Seq("2.10.5", "2.11.6")
 
 homepage := Some(url("https://github.com/reallylabs/jwt-scala"))
 
