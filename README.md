@@ -18,6 +18,7 @@ libraryDependencies += "io.really" %% "jwt-scala" % "1.2.2"
 #### Encode
 ```
 import io.really.jwt._
+import play.api.libs.json.Json
 
 val payload = Json.obj("name" -> "Ahmed", "email" -> "ahmed@gmail.com")
 val jwt = JWT.encode("secret-key", payload)
