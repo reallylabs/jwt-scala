@@ -90,4 +90,15 @@ class RSASpec extends FlatSpec with ShouldMatchers {
     assertResult(Json.obj("alg" -> Algorithm.RS256, "typ" -> "JWT"))(token.header.toJson)
   }
 
+  it should "return Invalid Signature if you try decode RSXXX signed JWT with crafted HSXXX algorithm header" in {
+    val payload = Json.obj("name" -> "Test", "email" -> "test@exemple.com")    
+    val publicKeyStr = MyKeyStore.publicKeyStr 
+    val privateKeyStr = MyKeyStore.privateKeyStr
+    val jwt_valid = JWT.encode(privateKeyStr, payload, Json.obj(), Some(Algorithm.RS256))
+    val jwt_invalid = JWT.encode(publicKeyStr, payload, Json.obj(), Some(Algorithm.HS256))
+
+    assertResult(payload)(JWT.decode(jwt_valid, Some(publicKeyStr)).asInstanceOf[JWTResult.JWT].payload)
+    assertResult(JWTResult.InvalidSignature)(JWT.decode(jwt_invalid, Some(publicKeyStr)))
+  }
+
 }

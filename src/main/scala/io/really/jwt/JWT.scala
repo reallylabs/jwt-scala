@@ -192,11 +192,16 @@ object JWT {
    */
   private[jwt] def verifySignature(algorithm: Algorithm, key: String, signingInput: String, signature: String): Boolean = {
     algorithm match {
-      case Algorithm.HS256 | Algorithm.HS384 | Algorithm.HS512 =>
+      case Algorithm.HS256 | Algorithm.HS384 | Algorithm.HS512 => {
+        if(PemUtil.isPublicKey(key)) return false
         encodedSignature(signingInput, key, Some(algorithm)).equals(signature)
+      }
       case Algorithm.RS256 | Algorithm.RS384 | Algorithm.RS512 =>
         verifyRsa(algorithm, key, signingInput, signature)
-      case Algorithm.NONE => true
+      case Algorithm.NONE if key == None  => 
+        true
+      case _ =>
+        false
     }
   }
 

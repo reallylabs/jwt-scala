@@ -4,7 +4,7 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.{PrivateKey, PublicKey}
 import io.really.jwt.JWTException.{InvalidPublicKey, InvalidPrivateKey}
 import org.apache.commons.codec.binary.Base64
-import scala.util.Try
+import scala.util.{Try, Success, Failure}
 
 object PemUtil {
 
@@ -22,6 +22,16 @@ object PemUtil {
       DerUtil.decodePrivateKey(bytes)
     }
     trial.getOrElse(throw new InvalidPrivateKey())
+  }
+
+  def isPublicKey(pem: String): Boolean = {
+    Try {
+      val bytes = pemToDer(pem)
+      DerUtil.decodePublicKey(bytes)
+    } match {
+      case Success(v) => true
+      case Failure(e) => false
+    }
   }
 
   def removeBeginEnd(pem: String) = {
