@@ -3,12 +3,12 @@
  */
 package io.really.jwt
 
-import org.scalatest.{ShouldMatchers, FlatSpec}
+import org.scalatest.{FlatSpec, Matchers}
 import play.api.libs.json.Json
 import org.apache.commons.codec.binary.Base64
 
 
-class JWTSpec extends FlatSpec with ShouldMatchers {
+class JWTSpec extends FlatSpec with Matchers {
 
   "encode" should "generate json web token" in {
     val payload = Json.obj("name" -> "Ahmed", "email" -> "ahmed@gmail.com")
@@ -82,10 +82,10 @@ class JWTSpec extends FlatSpec with ShouldMatchers {
   it should "return Invalid Signature if you try decode singed JWT with crafted None algorithm header" in {
     val payload = Json.obj("name" -> "Test", "email" -> "test@example.com")
     var jwt=JWT.encode("secret",payload)
-    
+
     val none_header="{\"alg\":\"none\", \"typ\":\"JWT\"}"
     jwt=jwt.replaceAll("^.*?\\.",Base64.encodeBase64URLSafeString(none_header.getBytes("utf-8"))+".");
-    
+
     assertResult(JWTResult.InvalidSignature)(JWT.decode(jwt, Some("secret")))
   }
 

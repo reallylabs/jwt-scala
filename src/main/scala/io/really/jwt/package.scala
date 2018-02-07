@@ -3,7 +3,6 @@
  */
 package io.really
 
-import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
 /** Provides classes and objects that define JWT Types
@@ -96,7 +95,7 @@ package object jwt {
       case JsString("RS512") => JsSuccess(RS512)
 
       case JsString("none") => JsSuccess(NONE)
-      case _ => JsError(Seq(JsPath() -> Seq(ValidationError("error.unsupported.algorithm"))))
+      case _ => JsError(Seq(JsPath() -> Seq(JsonValidationError("error.unsupported.algorithm"))))
     }
 
     def writes(alg: Algorithm): JsValue = JsString(alg.name)

@@ -1,10 +1,10 @@
 name := "jwt-scala"
 
-version := "1.2.2"
+version := "1.2.3"
 
 organization := "io.really"
 
-crossScalaVersions := Seq("2.10.5", "2.11.6")
+crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.4")
 
 homepage := Some(url("https://github.com/reallylabs/jwt-scala"))
 
@@ -35,11 +35,11 @@ publishTo := {
     Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.11"
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "2.1.5" % "test",
-  "com.typesafe.play" %% "play-json" % "2.3.8",
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+  "com.typesafe.play" %% "play-json" % "2.6.8",
   "commons-codec" % "commons-codec" % "1.6",
   "org.bouncycastle" % "bcprov-jdk16" % "1.46"
 )

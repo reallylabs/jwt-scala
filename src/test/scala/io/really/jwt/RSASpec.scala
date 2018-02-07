@@ -3,16 +3,16 @@
  */
 package io.really.jwt
 
-import io.really.jwt.JWTException.{InvalidPublicKey, InvalidPrivateKey}
+import io.really.jwt.JWTException.{InvalidPrivateKey, InvalidPublicKey}
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.openssl.PEMWriter
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import org.scalatest.{FlatSpec, Matchers}
 import play.api.libs.json.Json
 import java.io._
 import java.security._
 
 
-class RSASpec extends FlatSpec with ShouldMatchers {
+class RSASpec extends FlatSpec with Matchers {
 
   object MyKeyStore {
     if (Security.getProvider("BC") == null) Security.addProvider(new BouncyCastleProvider());
@@ -32,8 +32,8 @@ class RSASpec extends FlatSpec with ShouldMatchers {
       val writer = new StringWriter
       val pemWriter = new PEMWriter(writer)
         pemWriter.writeObject(key)
-        pemWriter.flush
-        pemWriter.close
+        pemWriter.flush()
+        pemWriter.close()
       PemUtil.removeBeginEnd(writer.toString)
     }
   }
@@ -91,8 +91,8 @@ class RSASpec extends FlatSpec with ShouldMatchers {
   }
 
   it should "return Invalid Signature if you try decode RSXXX signed JWT with crafted HSXXX algorithm header" in {
-    val payload = Json.obj("name" -> "Test", "email" -> "test@exemple.com")    
-    val publicKeyStr = MyKeyStore.publicKeyStr 
+    val payload = Json.obj("name" -> "Test", "email" -> "test@exemple.com")
+    val publicKeyStr = MyKeyStore.publicKeyStr
     val privateKeyStr = MyKeyStore.privateKeyStr
     val jwt_valid = JWT.encode(privateKeyStr, payload, Json.obj(), Some(Algorithm.RS256))
     val jwt_invalid = JWT.encode(publicKeyStr, payload, Json.obj(), Some(Algorithm.HS256))
